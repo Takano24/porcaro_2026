@@ -24,6 +24,7 @@ from isaaclab.managers import EventManager
 from .porcaro_2026_env_cfg import Porcaro2026EnvCfg
 from ..common.actions.base import ActionController
 from ..common.actions.torque import TorqueActionController
+from ..common.actions.motor import MotorController
 from .logging.logging_manager import LoggingManager
 from .rewards.reward import RewardManager
 from .rhythm_generator import RhythmGenerator
@@ -83,9 +84,11 @@ class Porcaro2026Env(DirectRLEnv):
         # ---------------------------------------------------------
         self.dof_idx, _ = self.robot.find_joints(self.cfg.dof_names)
         
-        if len(self.dof_idx) != 2:
-            raise ValueError(f"Expected 2 DOFs (wrist, grip), but found {len(self.dof_idx)} based on {self.cfg.dof_names}")
-        self.joint_ids_tuple: tuple[int, int] = (self.dof_idx[0], self.dof_idx[1])
+        if len(self.dof_idx) != 3:
+            raise ValueError(f"Expected 3 DOFs (elbow, wrist, grip), but found {len(self.dof_idx)} based on {self.cfg.dof_names}")
+        self.elbow_id = self.dof_idx[0]
+        self.wrist_id = self.dof_idx[1]
+        self.grip_id = self.dof_idx[2]
         
         # アクションバッファの初期化
         self.actions = torch.zeros((self.num_envs, self.cfg.action_space), device=self.device)
@@ -128,6 +131,14 @@ class Porcaro2026Env(DirectRLEnv):
             use_pressure_dependent_tau=ctrl_cfg.use_pressure_dependent_tau,
             geometric_cfg=self.cfg.pam_geometric_cfg,
             pam_tau_scale_range=pam_tau_scale_range,
+        )
+        self.motor_controller = MotorController(
+            dt_ctrl=self.dt_ctrl_step,
+            target_min_deg=self.cfg.elbow_target_min_deg,
+            target_max_deg=self.cfg.elbow_target_max_deg,
+            kp=self.cfg.elbow_kp,
+            kd=self.cfg.elbow_kd,
+            effort_limit=self.cfg.elbow_effort_limit,
         )
         self.action_controller.reset(self.num_envs, self.device)
 
@@ -185,7 +196,7 @@ class Porcaro2026Env(DirectRLEnv):
 
         self.use_frame_stacking = getattr(self.cfg, "use_frame_stacking", False)
         self.frame_stack_k = getattr(self.cfg, "frame_stack_k", 1)
-        self.base_obs_dim = 10 + self.lookahead_steps
+        self.base_obs_dim = 13 + self.lookahead_steps
 
         if self.use_frame_stacking:
             self.obs_history = torch.zeros(
@@ -218,7 +229,7 @@ class Porcaro2026Env(DirectRLEnv):
     def _get_corrected_joint_state(self):
         """
         Sim(負方向=正) から取得した関節状態を、プロジェクト仕様(正方向=正)に変換して返す。
-        対象: 手首(0) と グリップ(1) 両方の符号を反転。
+        対象: 肘()、手首(0) と グリップ(1) 両方の符号を反転。
         """
         # 全関節を取得
         q_full = self.robot.data.joint_pos
@@ -239,10 +250,9 @@ class Porcaro2026Env(DirectRLEnv):
         q_full = self.robot.data.joint_pos.clone()
         qd_full = self.robot.data.joint_vel.clone()
         
-        # ★修正: 対象軸のインデックス全てで反転
-        wrist_idx, grip_idx = self.joint_ids_tuple
-        q_full[:, [wrist_idx, grip_idx]] *= -1.0
-        qd_full[:, [wrist_idx, grip_idx]] *= -1.0
+        # ★修正: ３関節について対象軸のインデックス全てで反転
+        q_full[:, [self.elbow_id, self.wrist_id, self.grip_id]] *= -1.0
+        qd_full[:, [self.elbow_id, self.wrist_id, self.grip_id]] *= -1.0
         
         return q_full, qd_full
 
@@ -555,7 +565,7 @@ class Porcaro2026Env(DirectRLEnv):
         rhythm_buf = rhythm_buf / self.target_hit_force
 
         # [変更]: 観測結合 (q, qd, prev_act, sin, cos, bpm, lookahead)
-        # 観測次元: q(2)+qd(2)+prev_act(3)+sin(1)+cos(1)+bpm(1)+lookahead(25) = 35次元
+        # 観測次元: q(3)+qd(3)+prev_act(4)+sin(1)+cos(1)+bpm(1)+lookahead(25) = 38次元
         obs_single = torch.cat((q, qd, self.prev_actions, sin_phase, cos_phase, bpm_obs, rhythm_buf), dim=-1)
 
         # ↓↓↓ ここから追加 ↓↓↓
