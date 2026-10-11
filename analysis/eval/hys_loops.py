@@ -63,6 +63,14 @@ def loop_width(p, a):
     return dP * 1000, dA
 
 
+def to_md(df):
+    """markdown の表（tabulate が無い環境では to_string() で代用）"""
+    try:
+        return df.to_markdown()
+    except ImportError:
+        return "```\n" + df.to_string() + "\n```"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--hys_dir", default=os.path.join(ROOT, "data/user0/jfps2026/replay/hys"))
@@ -104,9 +112,9 @@ def main():
         fo.write("# ヒステリシスの比較（hys_loops.py）\n\n## tm_A：DF 三角波のループ（tri0 / tri1）\n\n")
         if len(L):
             P = L.pivot_table(index=["pmodel", "hys"], columns="tri", values=["dP_kPa", "dA_deg", "rmse"]).round(1)
-            fo.write(P.to_markdown() + "\n\n")
+            fo.write(to_md(P) + "\n\n")
         fo.write("## 手首角（全動作）\n\n")
-        fo.write(A.pivot_table(index="motion", columns=["pmodel", "hys"], values="rmse").round(1).to_markdown() + "\n")
+        fo.write(to_md(A.pivot_table(index="motion", columns=["pmodel", "hys"], values="rmse").round(1)) + "\n")
     print(open(os.path.join(out, "summary.md"), encoding="utf-8").read())
     if len(sims_A):
         import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt

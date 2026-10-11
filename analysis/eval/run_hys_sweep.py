@@ -95,17 +95,17 @@ def main():
                "--signal", RL.jetson_signal_path(a.jetson, m), *pmodel_args(pm, a.jetson, m),
                "--ctrl", json.dumps(ctrl), "--no_drum", "--headless", "--out", out]
         jobs.append((out, cmd))
-    print(f"[sweep] stage {a.stage}: {len(jobs)} 条件（既にあるものは飛ばす）")
+    print(f"[sweep] stage {a.stage}: {len(jobs)} 条件（既にあるものは飛ばす）", flush=True)
     for i, (out, cmd) in enumerate(jobs, 1):
         if os.path.exists(out):
-            print(f"  [{i}/{len(jobs)}] skip {os.path.basename(out)}"); continue
-        print(f"  [{i}/{len(jobs)}] {os.path.basename(out)}")
+            print(f"  [{i}/{len(jobs)}] skip {os.path.basename(out)}", flush=True); continue
+        print(f"  [{i}/{len(jobs)}] {os.path.basename(out)}", flush=True)
         if a.dry_run:
-            print("    " + " ".join(cmd)); continue
+            print("    " + " ".join(cmd), flush=True); continue
         t = time.time(); r = subprocess.run(cmd, cwd=ROOT)
-        print(f"    rc={r.returncode} ({time.time() - t:.0f} s)")
+        print(f"    rc={r.returncode} ({time.time() - t:.0f} s)", flush=True)
         if r.returncode != 0:
-            print("    失敗。ここで止める"); sys.exit(r.returncode)
+            print("    失敗。ここで止める", flush=True); sys.exit(r.returncode)
 
 
 if __name__ == "__main__":
