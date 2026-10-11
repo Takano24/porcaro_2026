@@ -1,0 +1,8 @@
+pmodel,hys,mean,p2p,std,hp_std
+real,real,31.61,0.36,0.11,0.04
+measured_raw,play_w10-40_cp15,29.53,11.55,2.82,1.07
+measured_raw,play_w40_cp15,28.31,7.80,2.00,0.55
+measured_raw,relay,25.53,16.70,3.61,2.35
+orificeV2,play_w10-40_cp15,26.22,2.01,0.53,0.02
+orificeV2,play_w40_cp15,26.22,2.01,0.53,0.02
+orificeV2,relay,26.22,2.01,0.53,0.02

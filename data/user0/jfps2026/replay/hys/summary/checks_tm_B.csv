@@ -1,0 +1,4 @@
+hys,err_raw_med,err_raw_max,err_orif_med,err_orif_max,dth_med,dth_max,n_dth_gt5,dP_med_kPa
+play_w10-40_cp15,1.92,25.28,1.87,12.27,0.80,17.70,5,5.95
+play_w40_cp15,2.20,18.41,1.84,12.27,0.69,10.83,3,5.95
+relay,1.96,24.38,1.44,12.22,1.47,16.62,6,5.95
