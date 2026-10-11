@@ -1,0 +1,24 @@
+{
+  "signal": "/home/actuated/my_isaaclab_projects/jetson_project/signals/tm_C_sine.csv",
+  "pmodel": "orifice",
+  "params": {
+    "tau": 0.0833,
+    "L": 0.045,
+    "c_in": 4.8542,
+    "c_out": 9.962,
+    "ps": 0.5776,
+    "b": 0.1323
+  },
+  "no_drum": true,
+  "real_log": null,
+  "dt": 0.005,
+  "env_cfg": "Porcaro2026EnvCfg_Default (DRなし)",
+  "ctrl": {
+    "pam_hys_mode": "play",
+    "pam_hys_play_widths": [
+      0.04
+    ],
+    "pam_hys_coef_p": 15.0
+  },
+  "meas_filter": null
+}
