@@ -10,6 +10,8 @@ tm_A_quasistatic,measured_raw,play_w80_cp15,6.80,3.82,5.63
 tm_A_quasistatic,measured_raw,play_w80_cp30,7.54,3.13,6.87
 tm_A_quasistatic,measured_raw,relay,7.43,3.73,6.42
 tm_A_quasistatic,measured_v2,relay,6.91,3.68,5.85
+tm_A_quasistatic,orificeV2,play_w40_cp15,7.33,4.17,6.03
+tm_A_quasistatic,orificeV2,relay,7.46,3.79,6.43
 tm_B_steps,measured_raw,play_w10-40_cp15,6.12,2.81,5.44
 tm_B_steps,measured_raw,play_w40_cp15,5.10,2.44,4.48
 tm_B_steps,measured_raw,relay,6.04,2.46,5.52
