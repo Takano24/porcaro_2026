@@ -50,7 +50,7 @@ def read_table(md: str, heading: str) -> dict[str, dict[str, float]]:
 
 W = read_table(os.path.join(CMP, "summary.md"), "wrist：RMSE")
 P = read_table(os.path.join(CMP, "summary.md"), "圧力 DF：NRMSE")
-plt.rcParams.update({"font.family": "serif", "font.serif": ["TeX Gyre Termes", "Times New Roman", "DejaVu Serif"],
+plt.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42, "font.family": "serif", "font.serif": ["Liberation Serif", "Times New Roman", "TeX Gyre Termes", "DejaVu Serif"],
                      "font.size": 8, "axes.spines.top": False, "axes.spines.right": False})
 fig, (axp, axw) = plt.subplots(1, 2, figsize=(3.4, 2.3), sharey=True, gridspec_kw=dict(width_ratios=[1, 1.25]))
 y = np.arange(len(MOTIONS))[::-1]
