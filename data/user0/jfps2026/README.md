@@ -10,4 +10,4 @@
 
 | フォルダ | 入れるもの |
 |---|---|
-| `replay/` | 開ループ再生の結果（`scripts/replay_open_loop.py`） |
+| `replay/` | 開ループ再生の結果（`scripts/tools/user0/jfps2026/replay_open_loop.py`） |

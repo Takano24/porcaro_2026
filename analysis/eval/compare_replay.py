@@ -1,11 +1,11 @@
 """
-compare_replay.py — 開ループ再生（scripts/replay_open_loop.py）の sim 出力と実機ログを並べて比べる
+compare_replay.py — 開ループ再生（scripts/tools/user0/jfps2026/replay_open_loop.py）の sim 出力と実機ログを並べて比べる
 
 入力:
   data/user0/jfps2026/replay/sim_<動作>_<圧力モデル>.csv（200 Hz）
   ../jetson_project/signals/<動作>.csv（指令, 50 Hz）と data/*/*/playback_*/data_<動作>_<数字>.csv（実機ログ, 200 Hz）
   （jetson_project の旧配置 test_signals/ にも対応）
-  実機ログは scripts/real_log.py で読む（DF/F 圧力列の入れ替わりを戻し、flag のエコーで指令に時刻を合わせる。
+  実機ログは scripts/tools/user0/jfps2026/real_log.py で読む（DF/F 圧力列の入れ替わりを戻し、flag のエコーで指令に時刻を合わせる。
   replay_open_loop.py の measured モードと同じ処理）
 
 指標（動作 × 圧力モデル。各信号の最初の 2 s の保持区間は sim が 0 MPa から立ち上がるので --skip_s で除く）:
@@ -43,7 +43,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-sys.path.insert(0, os.path.join(ROOT, "scripts"))
+sys.path.insert(0, os.path.join(ROOT, "scripts", "tools", "user0", "jfps2026"))
 import real_log as RL  # noqa: E402
 
 MOTIONS = ["tm_A_quasistatic", "tm_B_steps", "tm_C_sine", "tm_D_antagonist",

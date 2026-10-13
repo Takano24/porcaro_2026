@@ -123,7 +123,7 @@ $$
 
 ### 準備（10 分）
 1. porcaro_2026：PR（hysteresis-play）をマージして `git pull`。jetson_project：`git pull`（v4 の配置）
-2. `python scripts/replay_open_loop.py --signal x --out x -h` が通ること（Isaac Lab の環境 env_isaaclab）
+2. `python scripts/tools/user0/jfps2026/replay_open_loop.py --signal x --out x -h` が通ること（Isaac Lab の環境 env_isaaclab）
 3. `python analysis/eval/run_hys_sweep.py --stage 1 --dry_run` で、信号と実測ログのパスが解決されること
 
 ### Stage 1：同定（tm_A、約 30 分）

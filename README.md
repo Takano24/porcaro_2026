@@ -32,7 +32,7 @@ porcaro_2026/
  │   │   │   ├── paper/                    # Frozen CSVs the paper figures read (sim/tau/hardware/ablation/validation)
  │   │   │   └── models/                   # Exported ONNX policies + manifest_fragment.yaml for jetson_project
  │   │   └── jfps2026/                     # JFPS 2026 Autumn Conference
- │   │       └── replay/                   # Open-loop replay results (scripts/replay_open_loop.py)
+ │   │       └── replay/                   # Open-loop replay results (scripts/tools/user0/jfps2026/replay_open_loop.py)
  │   ├── user1/                            # Same for user1-3; each starts with two templates:
  │   │   ├── conference1/                  #   conference talk template (copy + rename, e.g. robomech2027/)
  │   │   └── paper1/                       #   journal paper template   (copy + rename, e.g. ral2027/)
@@ -47,10 +47,11 @@ porcaro_2026/
  │   ├── list_envs.py                      # List all registered environments
  │   ├── random_agent.py                   # Random action agent
  │   ├── zero_agent.py                     # Zero action agent
- │   ├── replay_open_loop.py               # Open-loop pressure-command replay in sim
  │   ├── tools/                            # Helper tools other than training (see scripts/tools/README.md)
  │   │   ├── common/                       #   shared tools: take input/output folders as arguments (reviewed)
- │   │   └── user0/                        #   one folder per user, same as source/.../userN/ (edit freely)
+ │   │   └── user0/                        #   one folder per user, same as source/.../userN/ (edit freely),
+ │   │       ├── binary2026/               #     then one folder per purpose, same name as data/user0/<venue>/
+ │   │       └── jfps2026/                 #     (e.g. jfps2026/replay_open_loop.py: open-loop replay in sim)
  │   └── rsl_rl/
  │       ├── train.py                      # Main training script
  │       ├── play.py                       # Inference and visualization script

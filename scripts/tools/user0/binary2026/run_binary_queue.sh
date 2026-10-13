@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 2値（電磁弁）版の学習キュー。porcaro_2026 のリポジトリ直下で実行する。
-#   使い方:  bash scripts/tools/user0/run_binary_queue.sh        （計画を表示して確認 → 実行）
-#            bash scripts/tools/user0/run_binary_queue.sh -y     （確認なしで実行）
+#   使い方:  bash scripts/tools/user0/binary2026/run_binary_queue.sh        （計画を表示して確認 → 実行）
+#            bash scripts/tools/user0/binary2026/run_binary_queue.sh -y     （確認なしで実行）
 #   キューの進行ログは logs/user0/binary_queue/（git管理外）に出る。
 # 完了済みのランは飛ばし、1本失敗しても次へ進む。止まったら同じコマンドでやり直せば続きから回る。
 # コード・設定・RA-L のログは変更しない。出力は logs/user0/ の下だけ。

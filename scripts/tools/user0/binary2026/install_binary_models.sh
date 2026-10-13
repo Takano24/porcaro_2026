@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 2値版の ONNX 5本を jetson_project に入れて、manifest に登録し、整合性チェックまで通す。
-#   使い方（porcaro_2026 のリポジトリ直下から）:  bash scripts/tools/user0/install_binary_models.sh
+#   使い方（porcaro_2026 のリポジトリ直下から）:  bash scripts/tools/user0/binary2026/install_binary_models.sh
 #   jetson_project が porcaro_2026 と同じ階層にない場合は JETSON_DIR=<場所> を付ける。
 #
 # やること:

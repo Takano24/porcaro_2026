@@ -5,14 +5,14 @@ JFPS 柱③「作り直した圧力モデルをシミュレータに入れて、
 RA-L で使った user0 環境（Porcaro2026EnvCfg_Default, DR なし）をそのまま使い、
 方策の代わりに CSV の圧力指令を行動に変換して入れる。
 
-置き場所: porcaro_2026/scripts/replay_open_loop.py
+置き場所: porcaro_2026/scripts/tools/user0/jfps2026/replay_open_loop.py
 
 圧力モデル（--pmodel）:
   table    : 今のシミュレータ（始点圧×指令圧の 2 次元テーブル, pneumatic.py）
   lag      : 対称な一次遅れ＋むだ時間（9/29–30 のエコー付きデータで同定）
   orifice  : lag に、給気・排気のオリフィス流量の上限を足したもの（同上）
-  shaped   : orifice の前段で、指令の小さく速い振動を実測の振幅比マップで縮める（ITV のしきい値・現象論。scripts/itv_models.py）
-  pilot    : パイロット段（積分）＋重なりを持つ主弁の2状態モデル（ITV のしきい値・物理寄り。scripts/itv_models.py）
+  shaped   : orifice の前段で、指令の小さく速い振動を実測の振幅比マップで縮める（ITV のしきい値・現象論。scripts/tools/user0/jfps2026/itv_models.py）
+  pilot    : パイロット段（積分）＋重なりを持つ主弁の2状態モデル（ITV のしきい値・物理寄り。scripts/tools/user0/jfps2026/itv_models.py）
   pilot_leak : pilot の主弁が重なりの中でも少し漏れるようにしたもの（小振幅の削りすぎを修正。同上）
   measured : 実機で測った圧力をそのまま入れる（--real_log 必須）。
              「圧力→角度」だけを比べ、機構側（力マップ・摩擦・たるみ）の誤差を切り分ける
@@ -28,16 +28,16 @@ RA-L で使った user0 環境（Porcaro2026EnvCfg_Default, DR なし）をそ�
   --signal  test_signals/tm_*.csv（time, cmd_pressure_DF, cmd_pressure_F, cmd_pressure_G, 50 Hz）
   --real_log  measured モードのときの実機ログ（run_signal_playback.py の出力）
               実機ログは DF/F の圧力列が入れ替わっている（2026/9/29 判明）ので、ここで戻す。
-              時刻は flag 列（MicroLabBox が受け取った DF 指令のエコー）で指令に合わせる（scripts/real_log.py）。
+              時刻は flag 列（MicroLabBox が受け取った DF 指令のエコー）で指令に合わせる（scripts/tools/user0/jfps2026/real_log.py）。
 
 出力（--out, 200 Hz, 物理ステップごと）:
   time, P_cmd_DF/F/G, P_out_DF/F/G, wrist_angle_deg, grip_angle_deg, force_N
   角度は実機と同じ向き（Up+）に直したもの。力はスティック接触力の大きさ（×3.0 は環境と同じ）。
 
 使い方（Isaac Lab の python で）:
-  python scripts/replay_open_loop.py --signal ../jetson_project/test_signals/tm_C_sine.csv \
+  python scripts/tools/user0/jfps2026/replay_open_loop.py --signal ../jetson_project/test_signals/tm_C_sine.csv \
       --pmodel table --no_drum --headless --out out/sim_tm_C_sine_table.csv
-  python scripts/replay_open_loop.py --signal ... --pmodel measured \
+  python scripts/tools/user0/jfps2026/replay_open_loop.py --signal ... --pmodel measured \
       --real_log ../jetson_project/test_signals/data_tm_C_sine_XXXX.csv --no_drum --headless --out ...
 """
 from __future__ import annotations
@@ -55,7 +55,7 @@ p.add_argument("--pmodel", choices=["table", "lag", "orifice", "shaped", "pilot"
 p.add_argument("--real_log", default=None)
 p.add_argument("--params", default=None,
                help="lag/orifice/shaped/pilot/pilot_leak のパラメータを JSON で上書き（例: '{\"tau\":0.09,\"L\":0.045}'）。"
-                    "shaped/pilot/pilot_leak の既定値は scripts/itv_models.py の DEFAULTS")
+                    "shaped/pilot/pilot_leak の既定値は scripts/tools/user0/jfps2026/itv_models.py の DEFAULTS")
 p.add_argument("--no_drum", action="store_true", help="打面を横へ 2 m 退避（打面なしの実機試験と揃える）")
 p.add_argument("--ctrl", default=None,
                help="機械側（張力・関節）の設定を JSON で上書き。cfg.controller の項目名で指定。"
