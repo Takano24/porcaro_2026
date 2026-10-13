@@ -25,8 +25,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 CMP = os.path.join(ROOT, "data", "user0", "jfps2026", "replay", "compare")
 MOTIONS = [("tm_A_quasistatic", "Quasi-static"), ("tm_B_steps", "Steps"), ("tm_C_sine", "Sine"),
            ("tm_D_antagonist", "Antagonist"), ("tm_E_dbl160_seed2", "Striking 1"), ("tm_E_dbl160_seed3", "Striking 2")]
-MODELS = [("table", "Table model (T)", "#b9b7b0"), ("orificeV2", "Lag + flow limit (O)", "#4a5568"),
-          ("shaped", "O + threshold", "#c2410c"), ("measuredV2", "Measured pressure", "#2563eb")]
+MODELS = [("table", "Conventional (table)", "#b9b7b0"), ("orificeV2", "Flow-limited", "#4a5568"),
+          ("shaped", "Flow-limited + threshold", "#c2410c"), ("measuredV2", "Measured pressure", "#2563eb")]
 
 
 def read_table(md: str, heading: str) -> dict[str, dict[str, float]]:

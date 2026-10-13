@@ -122,16 +122,16 @@ def main():
                              "font.size": 8, "axes.spines.top": False, "axes.spines.right": False})
         r = reals["tm_A_quasistatic"]; ii = np.flatnonzero(r.segment.values == "A_DF_tri_1")
         fig, ax = plt.subplots(figsize=(3.3, 2.3))
-        ax.plot(smooth(r.P_DF.values[ii]) * 1000, smooth(r.wrist.values[ii]), color="#1b2430", lw=1.6, label="Measured")
-        show = [(("orificeV2", "relay"), "#4a5568", "-", "Sim, current (model O pressure)"),
-                (("measured_raw", "relay"), "#8a8985", "--", "Sim, current (measured pressure)")]
+        ax.plot(smooth(r.P_DF.values[ii]), smooth(r.wrist.values[ii]), color="#1b2430", lw=1.6, label="Measured")
+        show = [(("orificeV2", "relay"), "#4a5568", "-", "Sim, rate-based (flow-limited pressure)"),
+                (("measured_raw", "relay"), "#8a8985", "--", "Sim, rate-based (measured pressure)")]
         if a.fig:
             show.append((("measured_raw", a.fig), "#c2410c", "-", f"Sim, play (measured pressure)"))
         for key, col, ls, lab in show:
             if key in sims_A:
                 s = sims_A[key]
-                ax.plot(smooth(s.P_out_DF.values[ii]) * 1000, smooth(s.wrist_angle_deg.values[ii]), color=col, ls=ls, lw=1.1, label=lab)
-        ax.set_xlabel("DF pressure [kPa]"); ax.set_ylabel("Wrist angle [deg]"); ax.grid(alpha=0.25, lw=0.5)
+                ax.plot(smooth(s.P_out_DF.values[ii]), smooth(s.wrist_angle_deg.values[ii]), color=col, ls=ls, lw=1.1, label=lab)
+        ax.set_xlabel("DF pressure [MPa]"); ax.set_ylabel("Wrist angle [deg]"); ax.grid(alpha=0.25, lw=0.5)
         ax.legend(frameon=False, fontsize=6.5, loc="lower right"); fig.tight_layout()
         for ext in ("pdf", "png"):
             fig.savefig(os.path.join(out, f"loops_tm_A.{ext}"), dpi=200)
