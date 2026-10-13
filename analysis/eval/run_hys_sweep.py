@@ -1,6 +1,6 @@
 """run_hys_sweep.py — ヒステリシス力のモデル（relay / play）を振って、開ループ再生をまとめて回す
 
-2026/10/11 の実験用（JFPS 2026秋季、data/user0/jfps2026/replay/hys/）。scripts/replay_open_loop.py を
+2026/10/11 の実験用（JFPS 2026秋季、data/user0/jfps2026/replay/hys/）。scripts/tools/user0/jfps2026/replay_open_loop.py を
 1 条件 1 プロセスで順に呼ぶ（Isaac Lab の python で実行すること）。出力が既にある条件は飛ばす。
 
 段階
@@ -31,7 +31,7 @@ import sys
 import time
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-sys.path.insert(0, os.path.join(ROOT, "scripts"))
+sys.path.insert(0, os.path.join(ROOT, "scripts", "tools", "user0", "jfps2026"))
 import real_log as RL  # noqa: E402
 
 O_PARAMS = {"tau": 0.0833, "L": 0.045, "c_in": 4.8542, "c_out": 9.962, "ps": 0.5776, "b": 0.1323}
@@ -91,7 +91,7 @@ def main():
         if a.stage == 1 and pm == "measured_v2" and tag != "relay":
             continue                                      # measured_v2 は今の運用（relay）の参照としてだけ流す
         out = os.path.join(a.out_dir, f"sim_{m}__{pm}__{tag}.csv")
-        cmd = [sys.executable, os.path.join(ROOT, "scripts/replay_open_loop.py"),
+        cmd = [sys.executable, os.path.join(ROOT, "scripts/tools/user0/jfps2026/replay_open_loop.py"),
                "--signal", RL.jetson_signal_path(a.jetson, m), *pmodel_args(pm, a.jetson, m),
                "--ctrl", json.dumps(ctrl), "--no_drum", "--headless", "--out", out]
         jobs.append((out, cmd))

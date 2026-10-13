@@ -6,7 +6,7 @@
     ・Δθ@P : 同じ圧力での「上げの枝 − 下げの枝」の角度差の中央値 [deg]（ループの縦幅）
     ・θ の範囲、手首角 RMSE（その三角波の区間）
   全動作（stage2）：手首角の RMSE、平均ずれ（静的）、平均ずれを引いた RMSE（動的）。最初の 2 s は除く
-実機は jetson_project の実測ログ（scripts/real_log.py で DF/F の入れ替わりを戻し、エコーで時刻を合わせる）
+実機は jetson_project の実測ログ（scripts/tools/user0/jfps2026/real_log.py で DF/F の入れ替わりを戻し、エコーで時刻を合わせる）
 
 使い方:
   python analysis/eval/hys_loops.py                       # data/user0/jfps2026/replay/hys/ を全部読む
@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-sys.path.insert(0, os.path.join(ROOT, "scripts"))
+sys.path.insert(0, os.path.join(ROOT, "scripts", "tools", "user0", "jfps2026"))
 import real_log as RL  # noqa: E402
 
 DT = 0.005

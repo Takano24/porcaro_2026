@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 2値版5本を、シミュレーションで1環境・方策の平均出力（ノイズなし）で再生してログを残す。
 #   使い方（どこから実行してもよい。自分でリポジトリ直下に移動する）:
-#       bash scripts/tools/user0/run_sim_check.sh
+#       bash scripts/tools/user0/binary2026/run_sim_check.sh
 #   コンソール出力は logs/user0/binary_queue/（git管理外）に出る。
 # 出力: data/user0/binary2026/eval/sim_check/<ラン>/model_1499/<曲>_trial0/simulation_log.csv
 # 完了済み（simulation_log.csv がある条件）は飛ばす。
