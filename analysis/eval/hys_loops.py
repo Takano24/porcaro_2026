@@ -118,7 +118,7 @@ def main():
     print(open(os.path.join(out, "summary.md"), encoding="utf-8").read())
     if len(sims_A):
         import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
-        plt.rcParams.update({"font.family": "serif", "font.serif": ["TeX Gyre Termes", "Times New Roman", "DejaVu Serif"],
+        plt.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42, "font.family": "serif", "font.serif": ["Liberation Serif", "Times New Roman", "TeX Gyre Termes", "DejaVu Serif"],
                              "font.size": 8, "axes.spines.top": False, "axes.spines.right": False})
         r = reals["tm_A_quasistatic"]; ii = np.flatnonzero(r.segment.values == "A_DF_tri_1")
         fig, ax = plt.subplots(figsize=(3.3, 2.3))
@@ -132,7 +132,7 @@ def main():
                 s = sims_A[key]
                 ax.plot(smooth(s.P_out_DF.values[ii]) * 1000, smooth(s.wrist_angle_deg.values[ii]), color=col, ls=ls, lw=1.1, label=lab)
         ax.set_xlabel("DF pressure [kPa]"); ax.set_ylabel("Wrist angle [deg]"); ax.grid(alpha=0.25, lw=0.5)
-        ax.legend(frameon=False, fontsize=6.5, loc="upper left"); fig.tight_layout()
+        ax.legend(frameon=False, fontsize=6.5, loc="lower right"); fig.tight_layout()
         for ext in ("pdf", "png"):
             fig.savefig(os.path.join(out, f"loops_tm_A.{ext}"), dpi=200)
 
