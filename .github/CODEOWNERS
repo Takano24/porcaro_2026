@@ -1,5 +1,5 @@
 # Shared parts of the repository: changes here request a review from the owners below.
-# Each user's own folders (source/.../userN/, data/userN/) have no owner and can be edited freely.
+# Each user's own folders (source/.../userN/, data/userN/, scripts/tools/userN/) have no owner and can be edited freely.
 # See "Team Workflow" in README.md.
 
 /source/porcaro_2026/porcaro_2026/tasks/direct/porcaro_2026/common/    @Tsukasa-B
@@ -8,6 +8,8 @@
 /source/porcaro_2026/setup.py     @Tsukasa-B
 /source/porcaro_2026/pyproject.toml @Tsukasa-B
 /scripts/                         @Tsukasa-B
+# each user's own tools (scripts/tools/userN/): no owner, edit freely. Must come after /scripts/.
+/scripts/tools/user*/
 /analysis/                        @Tsukasa-B
 /data/common/                     @Tsukasa-B
 /.github/                         @Tsukasa-B

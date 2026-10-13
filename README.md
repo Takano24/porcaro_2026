@@ -48,6 +48,9 @@ porcaro_2026/
  │   ├── random_agent.py                   # Random action agent
  │   ├── zero_agent.py                     # Zero action agent
  │   ├── replay_open_loop.py               # Open-loop pressure-command replay in sim
+ │   ├── tools/                            # Helper tools other than training (see scripts/tools/README.md)
+ │   │   ├── common/                       #   shared tools: take input/output folders as arguments (reviewed)
+ │   │   └── user0/                        #   one folder per user, same as source/.../userN/ (edit freely)
  │   └── rsl_rl/
  │       ├── train.py                      # Main training script
  │       ├── play.py                       # Inference and visualization script
@@ -310,6 +313,7 @@ To add a new user (e.g., `user3`):
 
 The parent `__init__.py` imports every `user*/` package automatically, so it does not need to be edited.
 Store their data under `data/user3/` (start from the `conference1/` / `paper1/` templates there).
+Their own helper tools go in `scripts/tools/user3/` (create it when needed; see `scripts/tools/README.md`).
 
 ---
 
@@ -320,8 +324,10 @@ Each member works in **their own folders**, so changes from different members ne
 | Yours (edit freely) | Shared (keep changes minimal, reviewed by `.github/CODEOWNERS`) |
 |---|---|
 | `source/.../porcaro_2026/userN/` | `source/.../porcaro_2026/common/` |
-| `data/userN/`, `logs/userN/` (automatic) | `scripts/`, `analysis/`, `data/common/` |
-| personal tools: put them in `userN/tools/` | `README.md`, `.gitignore`, `environment.yml` |
+| `data/userN/`, `logs/userN/` (automatic) | `scripts/` (except `scripts/tools/userN/`), `analysis/`, `data/common/` |
+| `scripts/tools/userN/` (your own tools) | `scripts/tools/common/` (tools anyone can use), `README.md`, `.gitignore`, `environment.yml` |
+
+`logs/` is git-ignored and holds run outputs only (training logs, checkpoints, queue logs); do not keep scripts there.
 
 Rules:
 
