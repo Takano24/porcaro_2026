@@ -74,12 +74,12 @@ class Porcaro2026EnvCfg(DirectRLEnvCfg):
 
     # Elbow 位置制御用 PD ゲイン
     # ※現時点では仮置き。後で実機・シミュレーションに合わせて調整する
-    elbow_kp: float = 0.0
-    elbow_kd: float = 0.0
+    elbow_kp: float = 20.0
+    elbow_kd: float = 1.0
 
     # Elbow に許容する最大トルク
     # ※現時点では仮置き。後で決定する
-    elbow_effort_limit: float = 0.0
+    elbow_effort_limit: float = 20.0
 
     # Model B: 有効収縮率とたわみを考慮する幾何学設定
     pam_geometric_cfg: PamGeometricCfg = PamGeometricCfg(

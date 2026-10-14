@@ -110,6 +110,7 @@ class Porcaro2026Env(DirectRLEnv):
         # ---------------------------------------------------------
         dt_ctrl = self.cfg.sim.dt
         ctrl_cfg = self.cfg.controller
+        self.dt_ctrl_step = self.cfg.sim.dt * self.cfg.decimation
 
         pam_tau_scale_range = getattr(self.cfg, "pam_tau_scale_range", (1.0, 1.0))
         
@@ -141,6 +142,7 @@ class Porcaro2026Env(DirectRLEnv):
             effort_limit=self.cfg.elbow_effort_limit,
         )
         self.action_controller.reset(self.num_envs, self.device)
+        self.motor_controller.reset(self.num_envs, self.device)
 
              
         # ---------------------------------------------------------
@@ -168,7 +170,6 @@ class Porcaro2026Env(DirectRLEnv):
         # =========================================================
         # リズム生成器の切り替えロジック (維持)
         # =========================================================
-        self.dt_ctrl_step = self.cfg.sim.dt * self.cfg.decimation
         self.target_hit_force = getattr(self.cfg, "target_hit_force", 20.0)
 
         self.rhythm_generator = RhythmGenerator(
@@ -518,31 +519,56 @@ class Porcaro2026Env(DirectRLEnv):
         if actions is not None:
             self.actions = torch.clamp(actions, -1.0, 1.0)
 
+    
     def _apply_action(self) -> None:
-        """アクションの適用 (モデルの切り替えロジックを含む)"""
-        
-        # P_cmd (3ch) の取得
-        # TorqueActionController の compute_pressure が [Batch, 3] を返すと仮定
-        # (返さない場合は TorqueActionController 側の実装確認が必要ですが、標準的な実装であれば返します)
-        p_cmd_3d = None
-        if hasattr(self.action_controller, "compute_pressure"):
-            with torch.no_grad():
-                p_cmd_3d = self.action_controller.compute_pressure(self.actions)
+        """ElbowモータとWrist/GripのPAM制御を統合して適用する。"""
 
-        # --- 以下、既存の Model A/B ロジック (Model Cじゃない場合のみ実行) ---
+        # ---------------------------------------------------------
+        # 1. RLアクションを分割
+        #    action[0]   : Elbowの目標位置
+        #    action[1:4] : PAMの3チャンネル
+        # ---------------------------------------------------------
+        elbow_action = self.actions[:, 0]
+        pam_actions = self.actions[:, 1:4]
 
-        
-        processed_actions = self.actions
-
-        # コントローラに渡す座標系の補正 (Sim:Down+ -> Real:Up+)
-        q_full_corrected, _ = self._get_corrected_full_state()
-        
-        self.action_controller.apply(
-            actions=processed_actions,
-            q=q_full_corrected,
-            joint_ids=self.joint_ids_tuple,
-            robot=self.robot
+        # ---------------------------------------------------------
+        # 2. 全関節の状態をプロジェクト座標系に変換
+        # ---------------------------------------------------------
+        q_full_corrected, qd_full_corrected = (
+            self._get_corrected_full_state()
         )
+
+        # ---------------------------------------------------------
+        # 3. Elbowのモータ位置制御
+        # ---------------------------------------------------------
+        elbow_torque = self.motor_controller.apply(
+            action=elbow_action,
+            q=q_full_corrected,
+            qd=qd_full_corrected,
+            joint_id=self.elbow_id,
+        )
+
+        # ---------------------------------------------------------
+        # 4. Wrist/GripのPAMトルク計算
+        # ---------------------------------------------------------
+        pam_torque = self.action_controller.apply(
+            actions=pam_actions,
+            q=q_full_corrected,
+            joint_ids=(self.wrist_id, self.grip_id),
+            robot=self.robot,
+        )
+
+        # ---------------------------------------------------------
+        # 5. 3関節分のトルクを統合
+        # ---------------------------------------------------------
+        tau_full = pam_torque.clone()
+        tau_full[:, self.elbow_id] += elbow_torque
+
+        # ---------------------------------------------------------
+        # 6. 統合したトルクをロボットへ適用
+        # ---------------------------------------------------------
+        self.robot.set_joint_effort_target(tau_full)
+
 
 
     def _get_observations(self) -> dict:
@@ -629,7 +655,7 @@ class Porcaro2026Env(DirectRLEnv):
         is_exploded = torch.any(torch.abs(q) > 4.0, dim=-1) # 角度が約230度を超えたら異常
         is_exploded |= torch.any(torch.isnan(q), dim=-1)    # NaNが出たら異常
 
-        self.reset_terminated[:] = False
+        self.reset_terminated[:] = is_exploded
         return self.reset_terminated, time_outs
 
     def _reset_idx(self, env_ids: torch.Tensor) -> None:
@@ -681,8 +707,12 @@ class Porcaro2026Env(DirectRLEnv):
             self.reward_manager.reset_idx(env_ids)
         if hasattr(self, "logging_manager"):
             self.logging_manager.reset_idx(env_ids)
-        if hasattr(self, "rhythm_generator"):
-            self.rhythm_generator.reset(env_ids)
+        
+        # [追加]:PAM,肘関節のコントローラのリセット
+        if hasattr(self, "action_controller"):
+            self.action_controller.reset_idx(env_ids)
+        if hasattr(self, "motor_controller"):
+            self.motor_controller.reset_idx(env_ids)
             
 
         # --- [追加] Model C用のリセット ---
