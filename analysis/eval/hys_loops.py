@@ -121,7 +121,7 @@ def main():
         plt.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42, "font.family": "serif", "font.serif": ["Liberation Serif", "Times New Roman", "TeX Gyre Termes", "DejaVu Serif"],
                              "font.size": 8, "axes.spines.top": False, "axes.spines.right": False})
         r = reals["tm_A_quasistatic"]; ii = np.flatnonzero(r.segment.values == "A_DF_tri_1")
-        fig, ax = plt.subplots(figsize=(3.3, 2.3))
+        fig, ax = plt.subplots(figsize=(3.3, 2.6))
         ax.plot(smooth(r.P_DF.values[ii]), smooth(r.wrist.values[ii]), color="#1b2430", lw=1.6, label="Measured")
         show = [(("orificeV2", "relay"), "#4a5568", "-", "Sim, rate-based (flow-limited pressure)"),
                 (("measured_raw", "relay"), "#8a8985", "--", "Sim, rate-based (measured pressure)")]
@@ -132,7 +132,10 @@ def main():
                 s = sims_A[key]
                 ax.plot(smooth(s.P_out_DF.values[ii]), smooth(s.wrist_angle_deg.values[ii]), color=col, ls=ls, lw=1.1, label=lab)
         ax.set_xlabel("DF pressure [MPa]"); ax.set_ylabel("Wrist angle [deg]"); ax.grid(alpha=0.25, lw=0.5)
-        ax.legend(frameon=False, fontsize=6.5, loc="lower right"); fig.tight_layout()
+        h_, l_ = ax.get_legend_handles_labels()   # 凡例は図の上の外に置く（中に置くとどこでも線に重なる）
+        fig.legend(h_, l_, frameon=False, fontsize=6.5, ncol=2, loc="upper center", bbox_to_anchor=(0.55, 1.0),
+                   handlelength=1.6, columnspacing=1.0)
+        fig.tight_layout(rect=(0, 0, 1, 0.83))
         for ext in ("pdf", "png"):
             fig.savefig(os.path.join(out, f"loops_tm_A.{ext}"), dpi=200)
 
