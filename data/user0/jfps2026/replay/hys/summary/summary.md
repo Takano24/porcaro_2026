@@ -25,13 +25,13 @@ real         real             -9.4  -4.0  -80.0 -52.6   0.0   0.0
 ## 手首角（全動作）
 
 ```
-pmodel                measured_raw                                                                                                                                        measured_v2        orificeV2                    
-hys               play_w10-40_cp15 play_w10_cp15 play_w10_cp7.5 play_w20_cp15 play_w20_cp7.5 play_w40_cp15 play_w40_cp30 play_w40_cp7.5 play_w80_cp15 play_w80_cp30 relay       relay play_w10-40_cp15 play_w40_cp15 relay
-motion                                                                                                                                                                                                                    
-tm_A_quasistatic               NaN           7.7            8.0           7.3            7.7           6.9           7.1            7.5           6.8           7.5   7.4         6.9              NaN           7.3   7.5
-tm_B_steps                     6.1           NaN            NaN           NaN            NaN           5.1           NaN            NaN           NaN           NaN   6.0         NaN              4.9           4.9   4.8
-tm_C_sine                      9.3           NaN            NaN           NaN            NaN           9.3           NaN            NaN           NaN           NaN   8.7         NaN             10.1           9.9  10.1
-tm_D_antagonist                5.6           NaN            NaN           NaN            NaN           5.8           NaN            NaN           NaN           NaN   5.6         NaN              7.1           7.2   7.0
-tm_E_dbl160_seed2              8.0           NaN            NaN           NaN            NaN           8.4           NaN            NaN           NaN           NaN   7.9         NaN              9.2           9.5   9.2
-tm_E_dbl160_seed3              9.8           NaN            NaN           NaN            NaN          10.1           NaN            NaN           NaN           NaN  10.0         NaN             11.4          11.8  11.1
+pmodel                measured_raw                                                                                                                                        measured_v2        orificeV2                            shaped
+hys               play_w10-40_cp15 play_w10_cp15 play_w10_cp7.5 play_w20_cp15 play_w20_cp7.5 play_w40_cp15 play_w40_cp30 play_w40_cp7.5 play_w80_cp15 play_w80_cp30 relay       relay play_w10-40_cp15 play_w40_cp15 relay play_w40_cp15
+motion                                                                                                                                                                                                                                  
+tm_A_quasistatic               NaN           7.7            8.0           7.3            7.7           6.9           7.1            7.5           6.8           7.5   7.4         6.9              NaN           7.3   7.5           NaN
+tm_B_steps                     6.1           NaN            NaN           NaN            NaN           5.1           NaN            NaN           NaN           NaN   6.0         NaN              4.9           4.9   4.8           4.5
+tm_C_sine                      9.3           NaN            NaN           NaN            NaN           9.3           NaN            NaN           NaN           NaN   8.7         NaN             10.1           9.9  10.1           NaN
+tm_D_antagonist                5.6           NaN            NaN           NaN            NaN           5.8           NaN            NaN           NaN           NaN   5.6         NaN              7.1           7.2   7.0           NaN
+tm_E_dbl160_seed2              8.0           NaN            NaN           NaN            NaN           8.4           NaN            NaN           NaN           NaN   7.9         NaN              9.2           9.5   9.2           NaN
+tm_E_dbl160_seed3              9.8           NaN            NaN           NaN            NaN          10.1           NaN            NaN           NaN           NaN  10.0         NaN             11.4          11.8  11.1           NaN
 ```
